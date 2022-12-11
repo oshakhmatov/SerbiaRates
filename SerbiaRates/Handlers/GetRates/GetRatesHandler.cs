@@ -17,7 +17,7 @@ public class GetRatesHandler
 		if (averageRate is null)
 			return null;
 
-		var exchangeRates = await ratesRepo.GetExchangeRates(averageRate.Date);
+		var exchangeRates = await ratesRepo.GetExchangeRates();
 
 		return new RatesViewModel()
 		{

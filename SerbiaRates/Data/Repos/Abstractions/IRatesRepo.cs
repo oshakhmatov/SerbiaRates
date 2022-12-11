@@ -12,5 +12,5 @@ public interface IRatesRepo
 	public ValueTask<ExchangeRate?> GetLastExchangeRate(int companyId, CancellationToken token = default);
 
 	public ValueTask<AverageRate[]> GetAverageRates(int take = 10, CancellationToken token = default);
-	public ValueTask<ExchangeRate[]> GetExchangeRates(DateOnly date, CancellationToken token = default);	
+	public ValueTask<ExchangeRate[]> GetExchangeRates(CancellationToken token = default);	
 }

@@ -39,11 +39,13 @@ public sealed class RatesRepo : IRatesRepo
 			.FirstOrDefaultAsync(token);
 	}
 
-	public async ValueTask<ExchangeRate[]> GetExchangeRates(DateOnly date, CancellationToken token = default)
+	public async ValueTask<ExchangeRate[]> GetExchangeRates(CancellationToken token = default)
 	{
 		return await dbContext.ExchangeRates
-			.Where(er => er.Date == date)
-            .Include(er => er.Company)
+			.Include(er => er.Company)
+			.OrderByDescending(er => er.Date)
+			.GroupBy(c => c.Company!.Name)
+			.Select(g => g.First())
 			.ToArrayAsync(token);
 	}
 
