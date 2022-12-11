@@ -1,8 +1,7 @@
-﻿using SerbiaRates.Domain;
-using SerbiaRates.Modules.ExchangeRates.RatesUpdater.RateParsers;
-using SerbiaRates.Modules.Shared;
+﻿using SerbiaRates.Data.Repos.Abstractions;
+using SerbiaRates.Services.RatesUpdater.RateParsers;
 
-namespace SerbiaRates.Modules.ExchangeRates.RatesUpdater;
+namespace SerbiaRates.Services.RatesUpdater;
 
 public class RatesUpdater : HostedServiceBase
 {
@@ -21,14 +20,14 @@ public class RatesUpdater : HostedServiceBase
     {
         using var scope = serviceProvider.CreateScope();
 
-        var repo = scope.ServiceProvider.GetRequiredService<IExchangeRateRepo>();
+        var repo = scope.ServiceProvider.GetRequiredService<IRatesRepo>();
 
         foreach (var company in await repo.GetCompanies(stoppingToken))
         {
-            var latestRateCouple = await repo.GetLatestRateCouple(company.Id, stoppingToken);
+            var lastExchangeRate = await repo.GetLastExchangeRate(company.Id, stoppingToken);
 
-            if (latestRateCouple is not null &&
-				latestRateCouple.Date == DateOnly.FromDateTime(DateTime.Today))
+            if (lastExchangeRate is not null &&
+				lastExchangeRate.Date == DateOnly.FromDateTime(DateTime.Today))
                 continue;
 
             var result = await httpClient.GetStringAsync(company.Url, stoppingToken);
@@ -37,13 +36,16 @@ public class RatesUpdater : HostedServiceBase
 
             var dailyRateCoupleDto = parser.Parse(result);
 
-            if (latestRateCouple is not null && latestRateCouple.Date == dailyRateCoupleDto.Date)
+            if (lastExchangeRate is not null && lastExchangeRate.Date == dailyRateCoupleDto.Date)
                 continue;
 
-            var exchangeRates = dailyRateCoupleDto.AsExchangeRates(company.Id);
-            var averageRates = dailyRateCoupleDto.AsAverageRates();
+            var exchangeRate = dailyRateCoupleDto.AsExchangeRate(company.Id);
+            var averageRate = dailyRateCoupleDto.AsAverageRate();
 
-			await repo.SaveRates(exchangeRates, averageRates, stoppingToken);
+            await repo.Add(exchangeRate, stoppingToken);
+
+            if (averageRate is not null)
+                await repo.Add(averageRate, stoppingToken);
 		}
     }
 
@@ -51,6 +53,8 @@ public class RatesUpdater : HostedServiceBase
     {
         Const.GagaId => new GagaRateParser(),
         Const.PostanskaId => new PostanskaRateParser(),
-        _ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
+		Const.EldoradoId => new EldoradoParser(),
+        Const.TackaId => new TackaParser(),
+		_ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
     };
 }

@@ -1,4 +1,4 @@
-﻿namespace SerbiaRates.Modules.Shared;
+﻿namespace SerbiaRates.Services;
 
 public abstract class HostedServiceBase : BackgroundService
 {

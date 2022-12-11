@@ -1,22 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using SerbiaRates.Modules.ExchangeRates;
+using SerbiaRates.Handlers.GetRates;
 
 namespace SerbiaRates.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class RatesController : ControllerBase
+public class RatesController : ApiController
 {
-    private readonly IExchangeRateRepo exchangeRateRepo;
-
-    public RatesController(IExchangeRateRepo exchangeRateRepo)
-    {
-        this.exchangeRateRepo = exchangeRateRepo;
-    }
-
     [HttpGet]
-    public async Task<RateListViewModel> List()
+    public async Task<RatesViewModel?> Get([FromServices] GetRatesHandler handler)
     {
-        return await exchangeRateRepo.GetRates();
+        return await handler.Handle();
     }
 }

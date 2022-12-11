@@ -1,12 +1,11 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using SerbiaRates.Domain;
 
-namespace SerbiaRates.Modules.ExchangeRates.RatesUpdater.RateParsers;
+namespace SerbiaRates.Services.RatesUpdater.RateParsers;
 
 public sealed partial class GagaRateParser : IRatesParser
 {
-    public DailyRateCoupleDto Parse(string input)
+    public ExchangeRateDto Parse(string input)
     {
         var dateNode = DateNodeRegex().Match(input).Value;
         var rawDate = DateRegex().Match(dateNode).Value;
@@ -30,7 +29,7 @@ public sealed partial class GagaRateParser : IRatesParser
 
         var russianCulture = new CultureInfo("ru-RU");
 
-        return new DailyRateCoupleDto()
+        return new ExchangeRateDto()
         {
             Date = date,
             Euro = new RateDto()

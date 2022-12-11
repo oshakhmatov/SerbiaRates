@@ -1,10 +1,10 @@
-﻿namespace SerbiaRates.Modules.ExchangeRates;
+﻿namespace SerbiaRates.Handlers.GetRates;
 
-public sealed record RateListViewModel
+public sealed record RatesViewModel
 {
     public required DateOnly Date { get; init; }
     public required decimal AverageEuro { get; init; }
-	public required decimal AverageDollar { get; init; }
+    public required decimal AverageDollar { get; init; }
     public required CompanyRatesDto[] Rates { get; init; }
 }
 
@@ -20,6 +20,4 @@ public sealed record RateDto
 {
     public required decimal Buy { get; init; }
     public required decimal Sell { get; init; }
-	public required decimal BuyDelta { get; init; }
-	public required decimal SellDelta { get; init; }
 }

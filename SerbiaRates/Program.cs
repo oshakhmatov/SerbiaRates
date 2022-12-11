@@ -1,13 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using SerbiaRates.Data;
 using SerbiaRates.Data.Repos;
-using SerbiaRates.Modules.ExchangeRates;
-using SerbiaRates.Modules.ExchangeRates.RatesUpdater;
+using SerbiaRates.Data.Repos.Abstractions;
+using SerbiaRates.Handlers.GetCharts;
+using SerbiaRates.Handlers.GetRates;
+using SerbiaRates.Services.RatesUpdater;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<IExchangeRateRepo, ExchangeRateRepo>();
+// Repos
+builder.Services.AddScoped<IRatesRepo, RatesRepo>();
 
+// Handlers
+builder.Services.AddScoped<GetRatesHandler>();
+builder.Services.AddScoped<GetChartsHandler>();
+
+// HostedServices
 builder.Services.AddHostedService<RatesUpdater>();
 
 builder.Services
@@ -35,8 +43,6 @@ app.UseCors(x =>
 	x.AllowAnyHeader();
     x.WithOrigins("http://localhost:3000");  
 });
-
-app.UseAuthorization();
 
 app.MapControllers();
 

@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SerbiaRates.Domain;
-using SerbiaRates.Modules.ExchangeRates;
-using SerbiaRates.Modules.Shared;
+using SerbiaRates.Models;
 
 namespace SerbiaRates.Data;
 
@@ -12,27 +10,6 @@ public static class WebApplicationExtensions
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await dbContext.Database.MigrateAsync();
-
-        if (!await dbContext.Currencies.AnyAsync())
-        {
-            dbContext.AddRange(new[]
-            {
-                new Currency 
-                { 
-                    Id = Const.EuroId, 
-                    Code = "EUR",
-                    Name = "Euro"
-                },
-                new Currency 
-                { 
-                    Id = Const.DollarId, 
-                    Code = "USD", 
-                    Name = "United States Dollar"
-                }
-            });
-
-            await dbContext.SaveChangesAsync();
-        }
 
         if (!await dbContext.Companies.AnyAsync())
         {
@@ -50,7 +27,19 @@ public static class WebApplicationExtensions
                     Name = "Postal Savings Bank",
                     Url = "https://www.posted.co.rs/testang/phpremote/jsonall.php"
 				},
-            });
+				new Company
+				{
+					Id = Const.EldoradoId,
+					Name = "Eldorado",
+					Url = "https://www.eldorado-exchange.rs/kursna-lista/"
+				},
+				new Company
+				{
+					Id = Const.TackaId,
+					Name = "Tačka",
+					Url = "https://www.menjacnicatacka.co.rs/"
+				}
+			});
 
             await dbContext.SaveChangesAsync();
         }
