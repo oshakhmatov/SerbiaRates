@@ -27,10 +27,12 @@ public class RatesUpdater : HostedServiceBase
             var lastExchangeRate = await repo.GetLastExchangeRate(company.Id, stoppingToken);
 
             if (lastExchangeRate is not null &&
-				lastExchangeRate.Date == DateOnly.FromDateTime(DateTime.Today))
+				lastExchangeRate.CreateDate == DateOnly.FromDateTime(DateTime.Today))
                 continue;
 
-            var result = await httpClient.GetStringAsync(company.Url, stoppingToken);
+            var url = BuildUrl(company.Id, company.Url);
+
+            var result = await httpClient.GetStringAsync(url, stoppingToken);
 
             var parser = CreateParser(company.Id);
 
@@ -49,12 +51,23 @@ public class RatesUpdater : HostedServiceBase
 		}
     }
 
-    private static IRatesParser CreateParser(int providerId) => providerId switch
+    private static string BuildUrl(int providerId, string url) => providerId switch
+    {
+        Const.GagaId => url,
+        Const.PostanskaId => url,
+        Const.EldoradoId => url,
+        Const.TackaId => url,
+        Const.RaiffId => url + DateTime.Today.ToString("dd.MM.yyyy"),
+        _ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
+    };
+
+	private static IRatesParser CreateParser(int providerId) => providerId switch
     {
         Const.GagaId => new GagaRateParser(),
         Const.PostanskaId => new PostanskaRateParser(),
 		Const.EldoradoId => new EldoradoParser(),
         Const.TackaId => new TackaParser(),
-		_ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
+		Const.RaiffId => new RaiffParser(),
+		_ => throw new NotImplementedException($"No url builder for provider with ID {providerId} is registred")
     };
 }

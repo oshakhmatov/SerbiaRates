@@ -38,6 +38,12 @@ public static class WebApplicationExtensions
 					Id = Const.TackaId,
 					Name = "Tačka",
 					Url = "https://www.menjacnicatacka.co.rs/"
+				},
+				new Company
+				{
+					Id = Const.RaiffId,
+					Name = "Raiffeisen",
+					Url = "https://www.raiffeisenbank.rs/wp-json/wp/ea/currency?_wpnonce=ce5f7c1665&sdate="
 				}
 			});
 

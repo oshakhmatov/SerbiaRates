@@ -40,36 +40,36 @@ public class PostanskaRateParser : IRatesParser
             }
         };
     }
-}
 
-public sealed record ParsedRate
-{
-    public required int CurrencyId { get; init; }
-    public required DateOnly Date { get; init; }
-    public required decimal Buy { get; init; }
-    public required decimal Sell { get; init; }
-}
+	public sealed record ParsedRate
+	{
+		public required int CurrencyId { get; init; }
+		public required DateOnly Date { get; init; }
+		public required decimal Buy { get; init; }
+		public required decimal Sell { get; init; }
+	}
 
-public sealed class RatesResult
-{
-    [JsonPropertyName("Kursna_lista")]
-    public Result? Result { get; set; }
-}
+	public sealed class RatesResult
+	{
+		[JsonPropertyName("Kursna_lista")]
+		public Result? Result { get; set; }
+	}
 
-public class Result
-{
-    [JsonPropertyName("Valuta")]
-    public Rate[]? Rates { get; set; }
-}
+	public class Result
+	{
+		[JsonPropertyName("Valuta")]
+		public Rate[]? Rates { get; set; }
+	}
 
-public class Rate
-{
-    [JsonPropertyName("Vreme")]
-    public string? Date { get; set; }
-    [JsonPropertyName("Sifra_valute")]
-    public object? CurrencyId { get; set; }
-    [JsonPropertyName("Klkup_kurs")]
-    public object? Buy { get; set; }
-    [JsonPropertyName("Prodajni_kurs")]
-    public object? Sell { get; set; }
+	public class Rate
+	{
+		[JsonPropertyName("Vreme")]
+		public string? Date { get; set; }
+		[JsonPropertyName("Sifra_valute")]
+		public object? CurrencyId { get; set; }
+		[JsonPropertyName("Klkup_kurs")]
+		public object? Buy { get; set; }
+		[JsonPropertyName("Prodajni_kurs")]
+		public object? Sell { get; set; }
+	}
 }
