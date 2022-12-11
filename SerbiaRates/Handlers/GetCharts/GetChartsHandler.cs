@@ -19,20 +19,13 @@ public class GetChartsHandler
 
 		return new ChartsViewModel()
 		{
-			EuroPoints = averageRates
-				.Select(r => new Point()
-				{
-					Date = r.Date,
-					Rate = r.Euro
-				})
-				.ToArray(),
-			DollarPoints = averageRates
-				.Select(r => new Point()
-				{
-					Date = r.Date,
-					Rate = r.Dollar
-				})
-				.ToArray()
+			Points = averageRates.Select(ar => new Point()
+			{
+				Date = ar.Date.ToString("MMMM dd"),
+				EUR = ar.Euro,
+				USD = ar.Dollar
+			})
+			.ToArray()
 		};
 	}
 }

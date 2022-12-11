@@ -2,12 +2,12 @@
 
 public sealed record ChartsViewModel
 {
-	public required Point[] EuroPoints { get; init; }
-	public required Point[] DollarPoints { get; init; }
+	public required Point[] Points { get; init; }
 }
 
 public sealed record Point
 {
-	public required decimal Rate { get; init; }
-	public required DateOnly Date { get; init; }
+	public required decimal USD { get; init; }
+	public required decimal EUR { get; init; }
+	public required string Date { get; init; }
 }
