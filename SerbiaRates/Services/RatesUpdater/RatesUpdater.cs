@@ -24,30 +24,37 @@ public class RatesUpdater : HostedServiceBase
 
         foreach (var company in await repo.GetCompanies(stoppingToken))
         {
-            var lastExchangeRate = await repo.GetLastExchangeRate(company.Id, stoppingToken);
+            try
+            {
+                var lastExchangeRate = await repo.GetLastExchangeRate(company.Id, stoppingToken);
 
-            if (lastExchangeRate is not null &&
-				lastExchangeRate.CreateDate == DateOnly.FromDateTime(DateTime.Today))
-                continue;
+                if (lastExchangeRate is not null &&
+                    lastExchangeRate.CreateDate == DateOnly.FromDateTime(DateTime.Today))
+                    continue;
 
-            var url = BuildUrl(company.Id, company.Url);
+                var url = BuildUrl(company.Id, company.Url);
 
-            var result = await httpClient.GetStringAsync(url, stoppingToken);
+                var result = await httpClient.GetStringAsync(url, stoppingToken);
 
-            var parser = CreateParser(company.Id);
+                var parser = CreateParser(company.Id);
 
-            var dailyRateCoupleDto = parser.Parse(result);
+                var dailyRateCoupleDto = parser.Parse(result);
 
-            if (lastExchangeRate is not null && lastExchangeRate.Date == dailyRateCoupleDto.Date)
-                continue;
+                if (lastExchangeRate is not null && lastExchangeRate.Date == dailyRateCoupleDto.Date)
+                    continue;
 
-            var exchangeRate = dailyRateCoupleDto.AsExchangeRate(company.Id);
-            var averageRate = dailyRateCoupleDto.AsAverageRate();
+                var exchangeRate = dailyRateCoupleDto.AsExchangeRate(company.Id);
+                var averageRate = dailyRateCoupleDto.AsAverageRate();
 
-            await repo.Add(exchangeRate, stoppingToken);
+                await repo.Add(exchangeRate, stoppingToken);
 
-            if (averageRate is not null)
-                await repo.Add(averageRate, stoppingToken);
+                if (averageRate is not null)
+                    await repo.Add(averageRate, stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
 		}
     }
 

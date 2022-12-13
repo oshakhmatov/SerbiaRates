@@ -6,9 +6,16 @@ public abstract class HostedServiceBase : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await DoWork(stoppingToken);
+            try
+            {
+                await DoWork(stoppingToken);
 
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 
