@@ -41,7 +41,7 @@ app.UseCors(x =>
 {
 	x.AllowAnyMethod();
 	x.AllowAnyHeader();
-    x.WithOrigins("http://localhost:3000");  
+    x.WithOrigins("http://localhost:3000", "http://158.160.36.14");  
 });
 
 app.MapControllers();
