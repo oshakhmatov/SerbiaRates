@@ -32,9 +32,7 @@ public class RatesUpdater : HostedServiceBase
                     lastExchangeRate.CreateDate == DateOnly.FromDateTime(DateTime.Today))
                     continue;
 
-                var url = BuildUrl(company.Id, company.Url);
-
-                var result = await httpClient.GetStringAsync(url, stoppingToken);
+                var result = await httpClient.GetStringAsync(company.Url, stoppingToken);
 
                 var parser = CreateParser(company.Id);
 
@@ -58,23 +56,12 @@ public class RatesUpdater : HostedServiceBase
 		}
     }
 
-    private static string BuildUrl(int providerId, string url) => providerId switch
-    {
-        Const.GagaId => url,
-        Const.PostanskaId => url,
-        Const.EldoradoId => url,
-        Const.TackaId => url,
-        Const.RaiffId => url + DateTime.Today.ToString("dd.MM.yyyy"),
-        _ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
-    };
-
 	private static IRatesParser CreateParser(int providerId) => providerId switch
     {
         Const.GagaId => new GagaRateParser(),
         Const.PostanskaId => new PostanskaRateParser(),
 		Const.EldoradoId => new EldoradoParser(),
         Const.TackaId => new TackaParser(),
-		Const.RaiffId => new RaiffParser(),
-		_ => throw new NotImplementedException($"No url builder for provider with ID {providerId} is registred")
+		_ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
     };
 }
