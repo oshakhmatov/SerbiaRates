@@ -5,6 +5,6 @@ namespace SerbiaRates.Controllers;
 [ApiController]
 [Route("[controller]")]
 [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
-public class ApiController : ControllerBase
+public abstract class ApiController : ControllerBase
 {
 }

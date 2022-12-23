@@ -13,19 +13,19 @@ public sealed partial class GagaRateParser : IRatesParser
 
         var euroNode = EuroNodeRegex().Match(input).Value;
         var euroBuyNode = BuyNodeRegex().Match(euroNode).Value;
-		var eurorAverageNode = AverageNodeRegex().Match(euroNode).Value;
-		var euroSellNode = SellNodeRegex().Match(euroNode).Value;
+        var eurorAverageNode = AverageNodeRegex().Match(euroNode).Value;
+        var euroSellNode = SellNodeRegex().Match(euroNode).Value;
         var euroBuy = PriceRegex().Match(euroBuyNode).Value;
-		var euroAverage = PriceRegex().Match(eurorAverageNode).Value;
-		var euroSell = PriceRegex().Match(euroSellNode).Value;
+        var euroAverage = PriceRegex().Match(eurorAverageNode).Value;
+        var euroSell = PriceRegex().Match(euroSellNode).Value;
 
-		var dollarNode = DollarNodeRegex().Match(input).Value;
+        var dollarNode = DollarNodeRegex().Match(input).Value;
         var dollarBuyNode = BuyNodeRegex().Match(dollarNode).Value;
-		var dollarAverageNode = AverageNodeRegex().Match(dollarNode).Value;
-		var dollarSellNode = SellNodeRegex().Match(dollarNode).Value;
+        var dollarAverageNode = AverageNodeRegex().Match(dollarNode).Value;
+        var dollarSellNode = SellNodeRegex().Match(dollarNode).Value;
         var dollarBuy = PriceRegex().Match(dollarBuyNode).Value;
-		var dollarAverage = PriceRegex().Match(dollarAverageNode).Value;
-		var dollarSell = PriceRegex().Match(dollarSellNode).Value;
+        var dollarAverage = PriceRegex().Match(dollarAverageNode).Value;
+        var dollarSell = PriceRegex().Match(dollarSellNode).Value;
 
         var russianCulture = new CultureInfo("ru-RU");
 
@@ -36,14 +36,14 @@ public sealed partial class GagaRateParser : IRatesParser
             {
                 Buy = decimal.Parse(euroBuy, russianCulture),
                 Sell = decimal.Parse(euroSell, russianCulture),
-				Average = decimal.Parse(euroAverage, russianCulture)
-			},
+                Average = decimal.Parse(euroAverage, russianCulture)
+            },
             Dollar = new RateDto()
             {
                 Buy = decimal.Parse(dollarBuy, russianCulture),
                 Sell = decimal.Parse(dollarSell, russianCulture),
                 Average = decimal.Parse(dollarAverage, russianCulture)
-			}
+            }
         };
     }
 
@@ -62,10 +62,10 @@ public sealed partial class GagaRateParser : IRatesParser
     [GeneratedRegex("class=\"column-5\">\\d+,\\d+<")]
     private static partial Regex BuyNodeRegex();
 
-	[GeneratedRegex("class=\"column-6\">\\d+,\\d+<")]
-	private static partial Regex AverageNodeRegex();
+    [GeneratedRegex("class=\"column-6\">\\d+,\\d+<")]
+    private static partial Regex AverageNodeRegex();
 
-	[GeneratedRegex("class=\"column-7\">\\d+,\\d+<")]
+    [GeneratedRegex("class=\"column-7\">\\d+,\\d+<")]
     private static partial Regex SellNodeRegex();
 
     [GeneratedRegex("\\d+,\\d+")]

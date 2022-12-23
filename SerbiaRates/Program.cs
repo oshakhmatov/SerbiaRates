@@ -2,9 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SerbiaRates.Controllers;
 using SerbiaRates.Data;
 using SerbiaRates.Data.Repos;
-using SerbiaRates.Data.Repos.Abstractions;
-using SerbiaRates.Handlers.GetCharts;
-using SerbiaRates.Handlers.GetRates;
+using SerbiaRates.Handlers;
 using SerbiaRates.Services;
 using SerbiaRates.Services.RatesUpdater;
 
@@ -14,7 +12,7 @@ builder.Configuration
     .AddUserSecrets<ApiController>();
 
 // Repos
-builder.Services.AddScoped<IRatesRepo, RatesRepo>();
+builder.Services.AddScoped<IRepo, Repo>();
 
 // Handlers
 builder.Services.AddScoped<GetRatesHandler>();
@@ -49,9 +47,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(x =>
 {
-	x.AllowAnyMethod();
-	x.AllowAnyHeader();
-    x.WithOrigins("http://localhost:3000", "http://158.160.36.14", "http://rs-rates.xyz");  
+    x.AllowAnyMethod();
+    x.AllowAnyHeader();
+    x.WithOrigins("http://localhost:3000", "http://158.160.36.14", "http://rs-rates.xyz");
 });
 
 app.MapControllers();

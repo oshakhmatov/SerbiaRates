@@ -1,6 +1,6 @@
-﻿namespace SerbiaRates.Handlers.GetRates;
+﻿namespace SerbiaRates.ViewModels;
 
-public sealed record RatesViewModel
+public sealed class RatesViewModel
 {
     public required DateOnly Date { get; init; }
     public required decimal AverageEuro { get; init; }
@@ -8,7 +8,7 @@ public sealed record RatesViewModel
     public required CompanyRatesDto[] Rates { get; init; }
 }
 
-public sealed record CompanyRatesDto
+public sealed class CompanyRatesDto
 {
     public required string CompanyName { get; init; }
     public required DateOnly Date { get; init; }
@@ -16,7 +16,7 @@ public sealed record CompanyRatesDto
     public required RateDto Dollar { get; init; }
 }
 
-public sealed record RateDto
+public sealed class RateDto
 {
     public required decimal Buy { get; init; }
     public required decimal Sell { get; init; }

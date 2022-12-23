@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace SerbiaRates.Services;
 
-public class JsonDateConverter : JsonConverter<DateOnly>
+public sealed class JsonDateConverter : JsonConverter<DateOnly>
 {
     public override DateOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
         DateOnly.ParseExact(reader.GetString()!,

@@ -2,7 +2,7 @@
 
 public abstract class HostedServiceBase : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected sealed override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -10,7 +10,7 @@ public abstract class HostedServiceBase : BackgroundService
             {
                 await DoWork(stoppingToken);
 
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(Interval, stoppingToken);
             }
             catch (Exception ex)
             {
@@ -21,5 +21,5 @@ public abstract class HostedServiceBase : BackgroundService
 
     protected abstract TimeSpan Interval { get; }
 
-    protected abstract ValueTask DoWork(CancellationToken stoppingToken);
+    protected abstract Task DoWork(CancellationToken stoppingToken);
 }

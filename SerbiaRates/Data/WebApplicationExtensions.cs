@@ -20,26 +20,26 @@ public static class WebApplicationExtensions
                     Id = Const.GagaId,
                     Name = "Gaga",
                     Url = "https://menjacnicegaga.rs/"
-				},
+                },
                 new Company
                 {
-                    Id = Const.PostanskaId, 
+                    Id = Const.PostanskaId,
                     Name = "Postal Savings Bank",
                     Url = "https://www.posted.co.rs/testang/phpremote/jsonall.php"
-				},
-				new Company
-				{
-					Id = Const.EldoradoId,
-					Name = "Eldorado",
-					Url = "https://www.eldorado-exchange.rs/kursna-lista/"
-				},
-				new Company
-				{
-					Id = Const.TackaId,
-					Name = "Tačka",
-					Url = "https://www.menjacnicatacka.co.rs/"
-				}
-			});
+                },
+                new Company
+                {
+                    Id = Const.EldoradoId,
+                    Name = "Eldorado",
+                    Url = "https://www.eldorado-exchange.rs/kursna-lista/"
+                },
+                new Company
+                {
+                    Id = Const.TackaId,
+                    Name = "Tačka",
+                    Url = "https://www.menjacnicatacka.co.rs/"
+                }
+            });
 
             await dbContext.SaveChangesAsync();
         }

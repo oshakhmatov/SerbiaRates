@@ -14,8 +14,8 @@ public sealed class ExchangeRateDto
         Date = Date,
         EuroBuy = Euro.Buy,
         EuroSell = Euro.Sell,
-		DollarBuy = Dollar.Buy,
-		DollarSell = Dollar.Sell
+        DollarBuy = Dollar.Buy,
+        DollarSell = Dollar.Sell
     };
 
     public AverageRate? AsAverageRate() =>

@@ -1,67 +1,67 @@
-﻿using SerbiaRates.Data.Repos.Abstractions;
+﻿using SerbiaRates.Data.Repos;
 using SerbiaRates.Services.RatesUpdater.RateParsers;
 
 namespace SerbiaRates.Services.RatesUpdater;
 
-public class RatesUpdater : HostedServiceBase
+public sealed class RatesUpdater : HostedServiceBase
 {
-    private static readonly HttpClient httpClient = new();
+	private static readonly HttpClient httpClient = new();
 
-    private readonly IServiceProvider serviceProvider;
+	private readonly IServiceProvider serviceProvider;
 
-    public RatesUpdater(IServiceProvider serviceProvider)
-    {
-        this.serviceProvider = serviceProvider;
-    }
+	public RatesUpdater(IServiceProvider serviceProvider)
+	{
+		this.serviceProvider = serviceProvider;
+	}
 
-    protected override TimeSpan Interval => TimeSpan.FromHours(1);
+	protected override TimeSpan Interval => TimeSpan.FromHours(Const.RatesUpdaterIntervalHours);
 
-    protected override async ValueTask DoWork(CancellationToken stoppingToken)
-    {
-        using var scope = serviceProvider.CreateScope();
+	protected override async Task DoWork(CancellationToken stoppingToken)
+	{
+		using var scope = serviceProvider.CreateScope();
 
-        var repo = scope.ServiceProvider.GetRequiredService<IRatesRepo>();
+		var repo = scope.ServiceProvider.GetRequiredService<IRepo>();
 
-        foreach (var company in await repo.GetCompanies(stoppingToken))
-        {
-            try
-            {
-                var lastExchangeRate = await repo.GetLastExchangeRate(company.Id, stoppingToken);
+		foreach (var company in await repo.GetCompanies(stoppingToken))
+		{
+			try
+			{
+				var lastExchangeRate = await repo.GetLastExchangeRate(company.Id, stoppingToken);
 
-                if (lastExchangeRate is not null &&
-                    lastExchangeRate.CreateDate == DateOnly.FromDateTime(DateTime.Today))
-                    continue;
+				if (lastExchangeRate is not null &&
+					lastExchangeRate.CreateDate == DateOnly.FromDateTime(DateTime.Today))
+					continue;
 
-                var result = await httpClient.GetStringAsync(company.Url, stoppingToken);
+				var result = await httpClient.GetStringAsync(company.Url, stoppingToken);
 
-                var parser = CreateParser(company.Id);
+				var parser = CreateParser(company.Id);
 
-                var dailyRateCoupleDto = parser.Parse(result);
+				var exchangeRateDto = parser.Parse(result);
 
-                if (lastExchangeRate is not null && lastExchangeRate.Date == dailyRateCoupleDto.Date)
-                    continue;
+				if (lastExchangeRate is not null && lastExchangeRate.Date == exchangeRateDto.Date)
+					continue;
 
-                var exchangeRate = dailyRateCoupleDto.AsExchangeRate(company.Id);
-                var averageRate = dailyRateCoupleDto.AsAverageRate();
+				var exchangeRate = exchangeRateDto.AsExchangeRate(company.Id);
+				var averageRate = exchangeRateDto.AsAverageRate();
 
-                await repo.Add(exchangeRate, stoppingToken);
+				await repo.Add(exchangeRate, stoppingToken);
 
-                if (averageRate is not null)
-                    await repo.Add(averageRate, stoppingToken);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+				if (averageRate is not null)
+					await repo.Add(averageRate, stoppingToken);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
 		}
-    }
+	}
 
 	private static IRatesParser CreateParser(int providerId) => providerId switch
-    {
-        Const.GagaId => new GagaRateParser(),
-        Const.PostanskaId => new PostanskaRateParser(),
+	{
+		Const.GagaId => new GagaRateParser(),
+		Const.PostanskaId => new PostanskaRateParser(),
 		Const.EldoradoId => new EldoradoParser(),
-        Const.TackaId => new TackaParser(),
+		Const.TackaId => new TackaParser(),
 		_ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
-    };
+	};
 }
