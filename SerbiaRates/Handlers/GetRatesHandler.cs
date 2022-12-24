@@ -12,13 +12,13 @@ public sealed class GetRatesHandler
         this.ratesRepo = ratesRepo;
     }
 
-    public async Task<RatesViewModel?> Handle()
+    public async Task<RatesViewModel?> Handle(CancellationToken token)
     {
-        var averageRate = await ratesRepo.GetLastAverageRate();
+        var averageRate = await ratesRepo.GetLastAverageRate(token);
         if (averageRate is null)
             return null;
 
-        var exchangeRates = await ratesRepo.GetExchangeRates();
+        var exchangeRates = await ratesRepo.GetExchangeRates(token);
 
         return new RatesViewModel()
         {

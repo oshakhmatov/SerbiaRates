@@ -7,8 +7,10 @@ namespace SerbiaRates.Controllers;
 public sealed class RatesController : ApiController
 {
     [HttpGet]
-    public async Task<RatesViewModel?> Get([FromServices] GetRatesHandler handler)
+    public async Task<RatesViewModel?> Get(
+        [FromServices] GetRatesHandler handler,
+        CancellationToken token)
     {
-        return await handler.Handle();
+        return await handler.Handle(token);
     }
 }

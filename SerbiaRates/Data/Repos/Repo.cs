@@ -12,25 +12,29 @@ public sealed class Repo : IRepo
         this.dbContext = dbContext;
     }
 
-    public async Task Add<T>(T entity, CancellationToken token = default) where T : class
+    public async Task UpdateRates(ExchangeRate exchangeRate, AverageRate? averageRate, CancellationToken token)
     {
-        await dbContext.AddAsync(entity, token);
+        dbContext.Add(exchangeRate);
+
+        if (averageRate is not null)
+            dbContext.Add(averageRate);
+
         await dbContext.SaveChangesAsync(token);
     }
 
-    public async Task<Company[]> GetCompanies(CancellationToken token = default)
+    public async Task<Company[]> GetCompanies(CancellationToken token)
     {
         return await dbContext.Companies.ToArrayAsync(token);
     }
 
-    public async Task<AverageRate?> GetLastAverageRate(CancellationToken token = default)
+    public async Task<AverageRate?> GetLastAverageRate(CancellationToken token)
     {
         return await dbContext.AverageRates
             .OrderByDescending(ar => ar.Date)
             .FirstOrDefaultAsync(token);
     }
 
-    public async Task<ExchangeRate?> GetLastExchangeRate(int companyId, CancellationToken token = default)
+    public async Task<ExchangeRate?> GetLastExchangeRate(int companyId, CancellationToken token)
     {
         return await dbContext.ExchangeRates
             .Where(er => er.CompanyId == companyId)
@@ -38,7 +42,7 @@ public sealed class Repo : IRepo
             .FirstOrDefaultAsync(token);
     }
 
-    public async Task<ExchangeRate[]> GetExchangeRates(CancellationToken token = default)
+    public async Task<ExchangeRate[]> GetExchangeRates(CancellationToken token)
     {
         return await dbContext.ExchangeRates
             .Include(er => er.Company)
@@ -48,7 +52,7 @@ public sealed class Repo : IRepo
             .ToArrayAsync(token);
     }
 
-    public async Task<AverageRate[]> GetAverageRates(int take = 30, CancellationToken token = default)
+    public async Task<AverageRate[]> GetAverageRates(int take, CancellationToken token)
     {
         return await dbContext.AverageRates
             .OrderByDescending(ar => ar.Date)

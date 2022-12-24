@@ -5,6 +5,8 @@ namespace SerbiaRates.Handlers;
 
 public sealed class GetChartsHandler
 {
+    private const int ChartDays = 30;
+
     private readonly IRepo ratesRepo;
 
     public GetChartsHandler(IRepo ratesRepo)
@@ -12,10 +14,10 @@ public sealed class GetChartsHandler
         this.ratesRepo = ratesRepo;
     }
 
-    public async Task<ChartsViewModel?> Handle()
+    public async Task<ChartsViewModel?> Handle(CancellationToken token)
     {
-        var averageRates = await ratesRepo.GetAverageRates();
-        if (averageRates is null)
+        var averageRates = await ratesRepo.GetAverageRates(take: ChartDays, token);
+        if (!averageRates.Any())
             return null;
 
         return new ChartsViewModel()

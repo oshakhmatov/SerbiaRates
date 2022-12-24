@@ -1,15 +1,16 @@
-﻿using System.Globalization;
+﻿using SerbiaRates.Services.RatesUpdater;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SerbiaRates.Services.RatesUpdater.RateParsers;
+namespace SerbiaRates.Services.RateParsers;
 
-public sealed class PostanskaRateParser : IRatesParser
+public sealed class PostanskaParser : IRatesParser
 {
     private const int DollarId = 840;
     private const int EuroId = 978;
 
-    public ExchangeRateDto Parse(string input)
+    public RatesCoupleDto Parse(string input)
     {
         var ratesResult = JsonSerializer.Deserialize<RatesResult>(input);
 
@@ -25,7 +26,7 @@ public sealed class PostanskaRateParser : IRatesParser
         var dollar = rates.FirstOrDefault(r => r.CurrencyId == DollarId);
         var euro = rates.FirstOrDefault(r => r.CurrencyId == EuroId);
 
-        return new ExchangeRateDto()
+        return new RatesCoupleDto()
         {
             Date = date,
             Euro = new RateDto()

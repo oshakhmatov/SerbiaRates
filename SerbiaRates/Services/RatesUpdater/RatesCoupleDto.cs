@@ -2,7 +2,7 @@
 
 namespace SerbiaRates.Services.RatesUpdater;
 
-public sealed class ExchangeRateDto
+public sealed class RatesCoupleDto
 {
     public required DateOnly Date { get; init; }
     public required RateDto Euro { get; init; }

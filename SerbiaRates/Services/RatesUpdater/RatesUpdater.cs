@@ -1,67 +1,70 @@
 ﻿using SerbiaRates.Data.Repos;
-using SerbiaRates.Services.RatesUpdater.RateParsers;
+using SerbiaRates.Models;
+using SerbiaRates.Services.Helpers;
+using SerbiaRates.Services.HttpService;
+using SerbiaRates.Services.ParserCreator;
+using SerbiaRates.Services.RateBuilder;
 
 namespace SerbiaRates.Services.RatesUpdater;
 
-public sealed class RatesUpdater : HostedServiceBase
+public sealed class RatesUpdater : IRatesUpdater
 {
-	private static readonly HttpClient httpClient = new();
+    private readonly IRepo repo;
+    private readonly IWebProvider webProvider;
+    private readonly IParserCreator parserCreator;
+    private readonly IRateBuilder rateBuilder;
 
-	private readonly IServiceProvider serviceProvider;
+    public RatesUpdater(
+        IRepo repo,
+        IWebProvider webProvider,
+        IParserCreator parserCreator,
+        IRateBuilder rateBuilder)
+    {
+        this.repo = repo;
+        this.webProvider = webProvider;
+        this.parserCreator = parserCreator;
+        this.rateBuilder = rateBuilder;
+    }
 
-	public RatesUpdater(IServiceProvider serviceProvider)
-	{
-		this.serviceProvider = serviceProvider;
-	}
+    public async Task UpdateRates(CancellationToken token)
+    {
+        foreach (var company in await repo.GetCompanies(token))
+        {
+            try
+            {
+                var lastRate = await repo.GetLastExchangeRate(company.Id, token);
 
-	protected override TimeSpan Interval => TimeSpan.FromHours(Const.RatesUpdaterIntervalHours);
+                if (RateIsUpToDate(lastRate))
+                    continue;
 
-	protected override async Task DoWork(CancellationToken stoppingToken)
-	{
-		using var scope = serviceProvider.CreateScope();
+                var result = await webProvider.Request(company.Url, token);
 
-		var repo = scope.ServiceProvider.GetRequiredService<IRepo>();
+                var parser = parserCreator.CreateParser(company.Id);
 
-		foreach (var company in await repo.GetCompanies(stoppingToken))
-		{
-			try
-			{
-				var lastExchangeRate = await repo.GetLastExchangeRate(company.Id, stoppingToken);
+                var ratesCouple = parser.Parse(result);
 
-				if (lastExchangeRate is not null &&
-					lastExchangeRate.CreateDate == DateOnly.FromDateTime(DateTime.Today))
-					continue;
+                if (RateIsAlreadyExists(lastRate, ratesCouple))
+                    continue;
 
-				var result = await httpClient.GetStringAsync(company.Url, stoppingToken);
+                var exchangeRate = rateBuilder.BuildExchangeRate(ratesCouple, company.Id);
+                var averageRate = rateBuilder.BuildAverageRate(ratesCouple);
 
-				var parser = CreateParser(company.Id);
+                await repo.UpdateRates(exchangeRate, averageRate, token);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+    }
 
-				var exchangeRateDto = parser.Parse(result);
+    private static bool RateIsUpToDate(ExchangeRate? exchangeRate)
+    {
+        return exchangeRate is not null && exchangeRate.CreateDate == Date.Today();
+    }
 
-				if (lastExchangeRate is not null && lastExchangeRate.Date == exchangeRateDto.Date)
-					continue;
-
-				var exchangeRate = exchangeRateDto.AsExchangeRate(company.Id);
-				var averageRate = exchangeRateDto.AsAverageRate();
-
-				await repo.Add(exchangeRate, stoppingToken);
-
-				if (averageRate is not null)
-					await repo.Add(averageRate, stoppingToken);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-			}
-		}
-	}
-
-	private static IRatesParser CreateParser(int providerId) => providerId switch
-	{
-		Const.GagaId => new GagaRateParser(),
-		Const.PostanskaId => new PostanskaRateParser(),
-		Const.EldoradoId => new EldoradoParser(),
-		Const.TackaId => new TackaParser(),
-		_ => throw new NotImplementedException($"No parser for provider with ID {providerId} is registred")
-	};
+    private static bool RateIsAlreadyExists(ExchangeRate? exchangeRate, RatesCoupleDto ratesCouple)
+    {
+        return exchangeRate is not null && exchangeRate.Date == ratesCouple.Date;
+    }
 }

@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SerbiaRates.Services;
+namespace SerbiaRates.Services.Helpers;
 
 public sealed class JsonDateConverter : JsonConverter<DateOnly>
 {
