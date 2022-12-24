@@ -1,4 +1,4 @@
-﻿namespace SerbiaRates.Services.HttpService;
+﻿namespace SerbiaRates.Services.WebProvider;
 
 public sealed class WebProvider : IWebProvider
 {

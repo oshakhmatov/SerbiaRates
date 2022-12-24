@@ -1,9 +1,9 @@
 ﻿using SerbiaRates.Models;
 using SerbiaRates.Services.RatesUpdater;
 
-namespace SerbiaRates.Services.RateBuilder;
+namespace SerbiaRates.Services.RatesUpdater.RateBuilder;
 
-public class RateBuilder : IRateBuilder
+public sealed class RateBuilder : IRateBuilder
 {
     public ExchangeRate BuildExchangeRate(RatesCoupleDto ratesCouple, int companyId)
     {

@@ -1,5 +1,4 @@
-﻿using SerbiaRates.Services.RateParsers;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace SerbiaRates.Services.RatesUpdater.RateParsers;

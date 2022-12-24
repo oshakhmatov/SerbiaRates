@@ -1,10 +1,9 @@
-﻿using SerbiaRates.Services.RateParsers;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace SerbiaRates.Services.RatesUpdater.RateParsers;
 
-public sealed partial class TackaParser : IRatesParser
+public sealed partial class EldoradoParser : IRatesParser
 {
     public RatesCoupleDto Parse(string input)
     {
@@ -18,37 +17,35 @@ public sealed partial class TackaParser : IRatesParser
             .ToArray();
 
         var euroBuy = PriceRegex().Match(currencyNodes[0]).Value;
-        var euroSell = PriceRegex().Match(currencyNodes[1]).Value;
-        var dollarBuy = PriceRegex().Match(currencyNodes[6]).Value;
-        var dollarSell = PriceRegex().Match(currencyNodes[7]).Value;
-
-        var russianCulture = new CultureInfo("ru-RU");
+        var euroSell = PriceRegex().Match(currencyNodes[2]).Value;
+        var dollarBuy = PriceRegex().Match(currencyNodes[3]).Value;
+        var dollarSell = PriceRegex().Match(currencyNodes[5]).Value;
 
         return new RatesCoupleDto()
         {
             Date = date,
             Euro = new RateDto()
             {
-                Buy = decimal.Parse(euroBuy, russianCulture),
-                Sell = decimal.Parse(euroSell, russianCulture)
+                Buy = decimal.Parse(euroBuy),
+                Sell = decimal.Parse(euroSell)
             },
             Dollar = new RateDto()
             {
-                Buy = decimal.Parse(dollarBuy, russianCulture),
-                Sell = decimal.Parse(dollarSell, russianCulture)
+                Buy = decimal.Parse(dollarBuy),
+                Sell = decimal.Parse(dollarSell)
             }
         };
     }
 
-    [GeneratedRegex(">Kurs&nbsp;ažuriran&nbsp;\\d{1,2}[.]\\d{1,2}[.]\\d{4}[.]&nbsp;godine<")]
+    [GeneratedRegex(">Kursna lista na dan \\d{1,2}[.]\\d{1,2}[.]\\d{4}[.]<")]
     private static partial Regex DateNodeRegex();
 
     [GeneratedRegex("\\d{1,2}[.]\\d{1,2}[.]\\d{4}")]
     private static partial Regex DateRegex();
 
-    [GeneratedRegex("<p class=\"kurs_p\">\\d{1,3}[,]\\d{2}</p>")]
+    [GeneratedRegex("<td class=\"tdright\">\\d{1,3}[.]\\d{4}</td>")]
     private static partial Regex CurrencyNodeRegex();
 
-    [GeneratedRegex("\\d+[,]\\d+")]
+    [GeneratedRegex("\\d+[.]\\d+")]
     private static partial Regex PriceRegex();
 }

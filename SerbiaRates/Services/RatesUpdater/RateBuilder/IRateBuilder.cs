@@ -1,7 +1,7 @@
 ﻿using SerbiaRates.Models;
 using SerbiaRates.Services.RatesUpdater;
 
-namespace SerbiaRates.Services.RateBuilder
+namespace SerbiaRates.Services.RatesUpdater.RateBuilder
 {
     public interface IRateBuilder
     {

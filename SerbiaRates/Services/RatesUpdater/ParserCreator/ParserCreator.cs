@@ -1,9 +1,8 @@
-﻿using SerbiaRates.Services.RateParsers;
-using SerbiaRates.Services.RatesUpdater.RateParsers;
+﻿using SerbiaRates.Services.RatesUpdater.RateParsers;
 
-namespace SerbiaRates.Services.ParserCreator;
+namespace SerbiaRates.Services.RatesUpdater.ParserCreator;
 
-public class ParserCreator : IParserCreator
+public sealed class ParserCreator : IParserCreator
 {
     public IRatesParser CreateParser(int providerId) => providerId switch
     {

@@ -3,13 +3,13 @@ using SerbiaRates;
 using SerbiaRates.Data.Repos;
 using SerbiaRates.Models;
 using SerbiaRates.Services.Helpers;
-using SerbiaRates.Services.HttpService;
-using SerbiaRates.Services.ParserCreator;
-using SerbiaRates.Services.RateBuilder;
-using SerbiaRates.Services.RateParsers;
 using SerbiaRates.Services.RatesUpdater;
+using SerbiaRates.Services.RatesUpdater.ParserCreator;
+using SerbiaRates.Services.RatesUpdater.RateBuilder;
+using SerbiaRates.Services.RatesUpdater.RateParsers;
+using SerbiaRates.Services.WebProvider;
 
-namespace UnitTests.ServiceTests;
+namespace UnitTests.ServiceTests.RateUpdaterTests;
 
 public class RatesUpdaterTests
 {
@@ -113,7 +113,6 @@ public class RatesUpdaterTests
         rateParser.VerifyNoOtherCalls();
         rateBuilder.VerifyNoOtherCalls();
     }
-
 
     private static Company CreateCompany(int companyId, string url = "url")
     {

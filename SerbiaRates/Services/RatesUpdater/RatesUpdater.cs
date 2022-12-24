@@ -1,9 +1,9 @@
 ﻿using SerbiaRates.Data.Repos;
 using SerbiaRates.Models;
 using SerbiaRates.Services.Helpers;
-using SerbiaRates.Services.HttpService;
-using SerbiaRates.Services.ParserCreator;
-using SerbiaRates.Services.RateBuilder;
+using SerbiaRates.Services.RatesUpdater.ParserCreator;
+using SerbiaRates.Services.RatesUpdater.RateBuilder;
+using SerbiaRates.Services.WebProvider;
 
 namespace SerbiaRates.Services.RatesUpdater;
 

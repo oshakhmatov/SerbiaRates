@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SerbiaRates.Services.RateParsers;
+namespace SerbiaRates.Services.RatesUpdater.RateParsers;
 
 public sealed class PostanskaParser : IRatesParser
 {

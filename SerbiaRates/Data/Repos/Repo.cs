@@ -46,9 +46,8 @@ public sealed class Repo : IRepo
     {
         return await dbContext.ExchangeRates
             .Include(er => er.Company)
-            .OrderByDescending(er => er.Date)
             .GroupBy(c => c.Company!.Name)
-            .Select(g => g.First())
+            .Select(g => g.OrderByDescending(er => er.Date).First())
             .ToArrayAsync(token);
     }
 

@@ -1,6 +1,6 @@
 ﻿using SerbiaRates.Services.RatesUpdater;
 
-namespace SerbiaRates.Services.RateParsers;
+namespace SerbiaRates.Services.RatesUpdater.RateParsers;
 
 public interface IRatesParser
 {

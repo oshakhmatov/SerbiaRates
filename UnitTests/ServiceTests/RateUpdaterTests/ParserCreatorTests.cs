@@ -1,9 +1,8 @@
 ﻿using SerbiaRates;
-using SerbiaRates.Services.ParserCreator;
-using SerbiaRates.Services.RateParsers;
+using SerbiaRates.Services.RatesUpdater.ParserCreator;
 using SerbiaRates.Services.RatesUpdater.RateParsers;
 
-namespace UnitTests.ServiceTests;
+namespace UnitTests.ServiceTests.RateUpdaterTests;
 
 public class ParserCreatorTests
 {

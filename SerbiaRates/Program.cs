@@ -4,10 +4,10 @@ using SerbiaRates.Data.Repos;
 using SerbiaRates.Handlers;
 using SerbiaRates.HostedServices;
 using SerbiaRates.Services.Helpers;
-using SerbiaRates.Services.HttpService;
-using SerbiaRates.Services.ParserCreator;
-using SerbiaRates.Services.RateBuilder;
 using SerbiaRates.Services.RatesUpdater;
+using SerbiaRates.Services.RatesUpdater.ParserCreator;
+using SerbiaRates.Services.RatesUpdater.RateBuilder;
+using SerbiaRates.Services.WebProvider;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
