@@ -39,7 +39,10 @@ builder.Services
         .UseNpgsql(builder.Configuration["DbRates"]));
 
 builder.Services.AddEndpointsApiExplorer();
+
+#if DEBUG
 builder.Services.AddSwaggerGen();
+#endif
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -52,11 +55,10 @@ var app = builder.Build();
 
 await app.MigrateAndSeedDatabase();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+#if DEBUG
+app.UseSwagger();
+app.UseSwaggerUI();
+#endif
 
 app.UseCors(x =>
 {

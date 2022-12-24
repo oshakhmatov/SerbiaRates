@@ -54,7 +54,7 @@ public sealed class Repo : IRepo
     public async Task<AverageRate[]> GetAverageRates(int take, CancellationToken token)
     {
         return await dbContext.AverageRates
-            .OrderByDescending(ar => ar.Date)
+            .OrderBy(ar => ar.Date)
             .Take(take)
             .ToArrayAsync(token);
     }

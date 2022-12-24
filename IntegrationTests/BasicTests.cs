@@ -1,10 +1,10 @@
 ﻿namespace IntegrationTests;
 
-public class BasicTests : IClassFixture<WebAppFactory<Program>>
+public class BasicTests : IClassFixture<WebAppFactory>
 {
-    private readonly WebAppFactory<Program> webAppFactory;
+    private readonly WebAppFactory webAppFactory;
 
-    public BasicTests(WebAppFactory<Program> webAppFactory)
+    public BasicTests(WebAppFactory webAppFactory)
     {
         this.webAppFactory = webAppFactory;
     }

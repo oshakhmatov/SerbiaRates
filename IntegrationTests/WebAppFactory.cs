@@ -6,7 +6,7 @@ using SerbiaRates.Data;
 
 namespace IntegrationTests;
 
-public class WebAppFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
+public sealed class WebAppFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
