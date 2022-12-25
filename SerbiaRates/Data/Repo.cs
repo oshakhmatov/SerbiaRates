@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SerbiaRates.Data.Abstractions;
 using SerbiaRates.Models;
 
-namespace SerbiaRates.Data.Repos;
+namespace SerbiaRates.Data;
 
 public sealed class Repo : IRepo
 {
@@ -54,8 +55,9 @@ public sealed class Repo : IRepo
     public async Task<AverageRate[]> GetAverageRates(int take, CancellationToken token)
     {
         return await dbContext.AverageRates
-            .OrderBy(ar => ar.Date)
+            .OrderByDescending(ar => ar.Date)
             .Take(take)
+            .Reverse()
             .ToArrayAsync(token);
     }
 }

@@ -1,4 +1,4 @@
-﻿using SerbiaRates.Data.Repos;
+﻿using SerbiaRates.Data.Abstractions;
 using SerbiaRates.Models;
 using SerbiaRates.Services.Helpers;
 using SerbiaRates.Services.RatesUpdater.ParserCreator;

@@ -9,7 +9,7 @@ public sealed class ExchangeRate
     public required decimal DollarSell { get; init; }
     public required decimal DollarBuy { get; init; }
 
-    public DateOnly CreateDate { get; init; } = DateOnly.FromDateTime(DateTime.Today);
+    public DateOnly CreateDate { get; init; } = Services.Helpers.Date.Today();
 
     public required int CompanyId { get; init; }
     public Company? Company { get; init; }

@@ -1,6 +1,6 @@
 ﻿using SerbiaRates.Models;
 
-namespace SerbiaRates.Data.Repos;
+namespace SerbiaRates.Data.Abstractions;
 
 public interface IRepo
 {

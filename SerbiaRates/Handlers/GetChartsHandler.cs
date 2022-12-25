@@ -1,4 +1,4 @@
-﻿using SerbiaRates.Data.Repos;
+﻿using SerbiaRates.Data.Abstractions;
 using SerbiaRates.ViewModels;
 
 namespace SerbiaRates.Handlers;
@@ -6,6 +6,7 @@ namespace SerbiaRates.Handlers;
 public sealed class GetChartsHandler
 {
     private const int ChartDays = 30;
+    private const string DateFormat = "MMMM dd";
 
     private readonly IRepo ratesRepo;
 
@@ -24,7 +25,7 @@ public sealed class GetChartsHandler
         {
             Points = averageRates.Select(ar => new Point()
             {
-                Date = ar.Date.ToString("MMMM dd"),
+                Date = ar.Date.ToString(DateFormat),
                 EUR = ar.Euro,
                 USD = ar.Dollar
             })

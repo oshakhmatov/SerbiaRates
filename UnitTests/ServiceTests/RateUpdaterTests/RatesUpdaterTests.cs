@@ -1,6 +1,6 @@
 ﻿using Moq;
 using SerbiaRates;
-using SerbiaRates.Data.Repos;
+using SerbiaRates.Data.Abstractions;
 using SerbiaRates.Models;
 using SerbiaRates.Services.Helpers;
 using SerbiaRates.Services.RatesUpdater;
@@ -59,7 +59,7 @@ public class RatesUpdaterTests
         var webResult = "result";
         var ratesCouple = CreateRateCouple(Date.Today());
         var averageRate = CreateAverageRate();
-        var lastRate = CreateExchangeRate(companyId, DateOnly.FromDateTime(DateTime.Today.AddDays(-1)));
+        var lastRate = CreateExchangeRate(companyId, Date.Today(-1));
         var actualRate = CreateExchangeRate(companyId, Date.Today());
         var company = CreateCompany(companyId, companyUrl);
 

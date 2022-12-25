@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SerbiaRates.Data;
-using SerbiaRates.Data.Repos;
+using SerbiaRates.Data.Abstractions;
 using SerbiaRates.Handlers;
 using SerbiaRates.HostedServices;
 using SerbiaRates.Services.Helpers;
@@ -19,6 +19,7 @@ builder.Services.AddScoped<IRepo, Repo>();
 
 // Services
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IRatesUpdater, RatesUpdater>();
 builder.Services.AddScoped<IWebProvider, WebProvider>();
 
@@ -44,12 +45,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endif
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonDateConverter());
-    });
-
+builder.Services.AddControllers();
 
 var app = builder.Build();
 

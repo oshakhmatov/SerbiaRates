@@ -1,4 +1,4 @@
-﻿using SerbiaRates.Data.Repos;
+﻿using SerbiaRates.Data.Abstractions;
 using SerbiaRates.ViewModels;
 
 namespace SerbiaRates.Handlers;
@@ -22,13 +22,12 @@ public sealed class GetRatesHandler
 
         return new RatesViewModel()
         {
-            Date = averageRate.Date,
+            Date = averageRate.Date.ToString(Const.DateFormat),
             AverageEuro = averageRate.Euro,
             AverageDollar = averageRate.Dollar,
             Rates = exchangeRates.Select(er => new CompanyRatesDto()
             {
                 CompanyName = er.Company!.Name,
-                Date = er.Date,
                 Euro = new RateDto()
                 {
                     Sell = er.EuroSell,

@@ -1,5 +1,5 @@
 ﻿using Moq;
-using SerbiaRates.Data.Repos;
+using SerbiaRates.Data.Abstractions;
 using SerbiaRates.Handlers;
 using SerbiaRates.Models;
 using SerbiaRates.ViewModels;
